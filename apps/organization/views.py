@@ -5,7 +5,7 @@ from django.views.generic import View
 from pure_pagination import PageNotAnInteger, Paginator
 from django.http import HttpResponse
 
-from .models import CourseOrg, CityDict
+from .models import CourseOrg, CityDict, Teacher
 from .forms import UserAskForm
 from courses.models import Course
 from operation.models import UserFavorite
@@ -182,3 +182,16 @@ class AddFavView(View):
 
             else:
                 return HttpResponse('{"status":"fail", "msg":"收藏出错"}', content_type='application/json')
+
+
+class TeacherListView(View):
+    """
+    课程讲师列表页
+    """
+
+    def get(self, request):
+        all_teachers = Teacher.objects.all()
+
+        return render(request, "teachers-list.html", {
+            'all_teachers': all_teachers,
+        })
