@@ -1,6 +1,7 @@
 # _*_ coding: utf-8 _*_
 from django.shortcuts import render
 from django.views.generic.base import View
+from django.db.models import Q
 from pure_pagination import PageNotAnInteger, Paginator
 from django.http import HttpResponse
 
@@ -21,6 +22,13 @@ class CourseListView(View):
 
         hot_courses = Course.objects.all().order_by("-click_nums")[:3]
 
+        # 课程搜索
+        search_keywords = request.GET.get("keywords", "")
+        if search_keywords:
+            all_courses = all_courses.filter(
+                Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords) | Q(
+                    detail__icontains=search_keywords))
+
         sort = request.GET.get("sort", "")
         if sort:
             if sort == "students":
@@ -28,7 +36,8 @@ class CourseListView(View):
             elif sort == "hot":
                 all_courses = all_courses.order_by("-click_nums")
 
-        try:  # 对课程进行分页
+        # 对课程进行分页
+        try:
             page = request.GET.get("page", 1)
         except PageNotAnInteger:
             page = 1
