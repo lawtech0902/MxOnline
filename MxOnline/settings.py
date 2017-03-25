@@ -26,9 +26,10 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 SECRET_KEY = 'zgvpi7(p9ep45z_b)x0#)*d_f8^sucexnr!dcl-w9#r%uilgnf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# 生产部署时设置DEBUG为False，然后必须设置ALLOWED_HOSTS
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 AUTHENTICATION_BACKENDS = (
@@ -150,3 +151,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
