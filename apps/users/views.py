@@ -187,7 +187,10 @@ class UserInfoView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
-        return render(request, "usercenter-info.html", {})
+        current_page = 'user_info'
+        return render(request, "usercenter-info.html", {
+            'current_page': current_page
+        })
 
     def post(self, request):
         user_info_form = UserInfoForm(request.POST, instance=request.user)
@@ -271,9 +274,11 @@ class MyCourseView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
+        current_page = 'my_course'
         user_courses = UserCourse.objects.filter(user=request.user)
         return render(request, 'usercenter-mycourse.html', {
             'user_courses': user_courses,
+            'current_page': current_page,
         })
 
 
@@ -283,6 +288,7 @@ class MyFavOrgView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
+        current_page = 'my_fav'
         org_list = []
         fav_orgs = UserFavorite.objects.filter(user=request.user, fav_type=2)
         for fav_org in fav_orgs:
@@ -291,6 +297,7 @@ class MyFavOrgView(LoginRequiredMixin, View):
             org_list.append(org)
         return render(request, 'usercenter-fav-org.html', {
             'org_list': org_list,
+            'current_page': current_page,
         })
 
 
@@ -300,6 +307,7 @@ class MyFavTeacherView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
+        current_page = 'my_fav'
         teacher_list = []
         fav_teachers = UserFavorite.objects.filter(user=request.user, fav_type=3)
         for fav_teacher in fav_teachers:
@@ -308,6 +316,7 @@ class MyFavTeacherView(LoginRequiredMixin, View):
             teacher_list.append(teacher)
         return render(request, 'usercenter-fav-teacher.html', {
             'teacher_list': teacher_list,
+            'current_page': current_page,
         })
 
 
@@ -317,6 +326,7 @@ class MyFavCourseView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
+        current_page = 'my_fav'
         course_list = []
         fav_courses = UserFavorite.objects.filter(user=request.user, fav_type=1)
         for fav_course in fav_courses:
@@ -325,6 +335,7 @@ class MyFavCourseView(LoginRequiredMixin, View):
             course_list.append(course)
         return render(request, 'usercenter-fav-course.html', {
             'course_list': course_list,
+            'current_page': current_page,
         })
 
 
@@ -334,6 +345,7 @@ class MyMessageView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
+        current_page = 'my_message'
         all_messages = UserMessage.objects.filter(user=request.user.id)
 
         # 用户进入个人消息后清空未读消息的记录
@@ -351,6 +363,7 @@ class MyMessageView(LoginRequiredMixin, View):
 
         return render(request, 'usercenter-message.html', {
             'messages': messages,
+            'current_page': current_page,
         })
 
 
