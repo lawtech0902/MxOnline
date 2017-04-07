@@ -5,7 +5,7 @@ __date__ = '2017/3/1 下午8:19'
 """
 
 from .models import Course, CourseResource, Lesson, Video, BannerCourse
-
+from organization.models import CourseOrg
 import xadmin
 
 
@@ -20,20 +20,33 @@ class CourseResourceInline(object):
 
 
 class CourseAdmin(object):
-    list_display = ['name', 'desc', 'detail', 'degree', 'learned_times', 'students', 'fav_nums', 'image', 'click_nums',
-                    'add_time']
+    list_display = ['name', 'desc', 'detail', 'degree', 'learned_times', 'students', 'fav_nums', 'click_nums',
+                    'add_time', 'get_zj_nums', 'go_to']
     search_fields = ['name', 'desc', 'detail', 'degree', 'learned_times', 'students', 'fav_nums', 'image', 'click_nums']
     list_filter = ['name', 'desc', 'detail', 'degree', 'learned_times', 'students', 'fav_nums', 'image', 'click_nums',
                    'add_time']
     ordering = ['-click_nums']
     readonly_fields = ['click_nums']
+    list_editable = ['desc', 'degree']
     exclude = ['fav_nums']
     inlines = [LessonInline, CourseResourceInline]
+    style_fields = {'detail': 'ueditor'}
+
+    # refresh_times = [3, 5]  # 每3秒或5秒自动刷新一次页面
 
     def queryset(self):
         qs = super(CourseAdmin, self).queryset()
         qs = qs.filter(is_banner=False)
         return qs
+
+    def save_models(self):
+        # 在保存课程的时候统计课程机构的课程数
+        obj = self.new_obj
+        obj.save()
+        if obj.course_org is not None:
+            course_org = obj.course_org
+            course_org.course_nums = Course.objects.filter(course_org=course_org).count()
+            course_org.save()
 
 
 class BannerCourseAdmin(object):
