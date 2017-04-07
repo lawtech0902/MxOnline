@@ -28,6 +28,7 @@ PLUGINS = (
     'quickfilter',
     'sortablelist',
     'ueditor',
+    'excel',
 )
 
 

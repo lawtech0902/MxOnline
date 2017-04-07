@@ -31,6 +31,7 @@ class CourseAdmin(object):
     exclude = ['fav_nums']
     inlines = [LessonInline, CourseResourceInline]
     style_fields = {'detail': 'ueditor'}
+    import_excel = True
 
     # refresh_times = [3, 5]  # 每3秒或5秒自动刷新一次页面
 
@@ -47,6 +48,12 @@ class CourseAdmin(object):
             course_org = obj.course_org
             course_org.course_nums = Course.objects.filter(course_org=course_org).count()
             course_org.save()
+
+    def post(self, request, *args, **kwargs):
+        if 'execl' in request.FILES:
+            pass
+        # 一定要调用父类的post方法，否则导入的文件不能保存成功
+        return super(CourseAdmin, self).post(request, args, kwargs)
 
 
 class BannerCourseAdmin(object):
